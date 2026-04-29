@@ -37,6 +37,12 @@ def _get_model(system_instruction: Optional[str] = None):
     return genai.GenerativeModel(**kwargs)
 
 
+def _to_gemini_role(role: str) -> str:
+    if role == "assistant":
+        return "model"
+    return role
+
+
 async def generate_text(prompt: str, system: Optional[str] = None) -> str:
     """Simple single-turn generation."""
     try:
@@ -78,7 +84,7 @@ async def chat_with_history(
         model = _get_model(system)
         chat = model.start_chat(
             history=[
-                {"role": h["role"], "parts": [h["content"]]}
+                {"role": _to_gemini_role(h["role"]), "parts": [h["content"]]}
                 for h in history
             ]
         )
