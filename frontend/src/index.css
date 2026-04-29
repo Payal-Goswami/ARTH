@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 10% 4%;
+    --foreground: 40 20% 92%;
+    --card: 240 8% 7%;
+    --card-foreground: 40 20% 92%;
+    --primary: 43 60% 55%;
+    --primary-foreground: 240 10% 4%;
+    --secondary: 240 6% 14%;
+    --secondary-foreground: 40 20% 85%;
+    --muted: 240 6% 12%;
+    --muted-foreground: 240 5% 55%;
+    --accent: 186 100% 50%;
+    --accent-foreground: 240 10% 4%;
+    --destructive: 347 85% 65%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 16%;
+    --input: 240 6% 14%;
+    --ring: 43 60% 55%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-arth-dark text-foreground font-body antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track { background: #0A0A0F; }
+  ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #C9A84C44; }
+}
+
+@layer components {
+  .arth-card {
+    @apply bg-arth-dark-2 border border-arth-dark-4 rounded-xl p-6;
+    background: linear-gradient(135deg, rgba(26,26,36,0.9), rgba(17,17,24,0.95));
+    backdrop-filter: blur(12px);
+  }
+
+  .arth-card-glow {
+    @apply arth-card;
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.1), 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .arth-btn-primary {
+    @apply px-6 py-2.5 rounded-lg font-body font-medium text-sm transition-all duration-200;
+    background: linear-gradient(135deg, #C9A84C, #E8C97A);
+    color: #0A0A0F;
+  }
+  .arth-btn-primary:hover {
+    box-shadow: 0 0 20px rgba(201,168,76,0.4);
+    transform: translateY(-1px);
+  }
+
+  .arth-btn-ghost {
+    @apply px-6 py-2.5 rounded-lg font-body font-medium text-sm border border-arth-dark-4 text-muted-foreground transition-all duration-200;
+  }
+  .arth-btn-ghost:hover {
+    @apply border-arth-gold text-foreground;
+  }
+
+  .arth-input {
+    @apply w-full bg-arth-dark-3 border border-arth-dark-4 rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-all duration-200 font-body;
+  }
+  .arth-input:focus {
+    @apply border-arth-gold;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .gold-text {
+    background: linear-gradient(135deg, #C9A84C, #E8C97A, #C9A84C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-muted-foreground transition-all duration-200 cursor-pointer;
+  }
+  .nav-item:hover {
+    @apply text-foreground bg-arth-dark-3;
+  }
+  .nav-item.active {
+    @apply text-foreground bg-arth-dark-3;
+    border-left: 2px solid #C9A84C;
+  }
+
+  .stat-chip {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+  .stat-chip.positive { @apply bg-emerald-950/60 text-arth-emerald; }
+  .stat-chip.negative { @apply bg-rose-950/60 text-arth-rose; }
+  .stat-chip.neutral  { @apply bg-arth-dark-3 text-muted-foreground; }
+}
