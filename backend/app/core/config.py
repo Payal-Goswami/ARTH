@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
-from typing import List
+from typing import List, Union
 
 
 class Settings(BaseSettings):
@@ -19,24 +19,29 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = ""
     GEMINI_MODEL: str = "gemini-1.5-flash"
 
-    # Accepts both JSON array and comma-separated string from Render
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    # Declare as str first — we parse it manually in the validator
+    ALLOWED_ORIGINS: Union[List[str], str] = "http://localhost:5173,http://localhost:3000"
 
     @field_validator("ALLOWED_ORIGINS", mode="before")
     @classmethod
     def parse_origins(cls, v):
         if isinstance(v, str):
-            # Handle comma-separated: "https://a.vercel.app,https://b.com"
-            return [i.strip() for i in v.split(",") if i.strip()]
-        return v
+            # Strip surrounding brackets if someone passed ["url"] style
+            v = v.strip().strip("[]")
+            # Split on comma
+            return [i.strip().strip('"').strip("'") for i in v.split(",") if i.strip()]
+        if isinstance(v, list):
+            return v
+        return ["http://localhost:5173"]
 
     ALGORITHM: str = "HS256"
     BCRYPT_ROUNDS: int = 12
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
-        extra = "ignore"
+    model_config = {
+        "env_file": ".env",
+        "case_sensitive": True,
+        "extra": "ignore",
+    }
 
 
 settings = Settings()
