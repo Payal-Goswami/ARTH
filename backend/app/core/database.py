@@ -11,21 +11,25 @@ def _get_engine():
     if "?ssl=" in url:
         url = url.split("?ssl=")[0]
 
-    is_supabase = "supabase.com" in url or "supabase.co" in url
-    is_pooler = "pooler.supabase.com" in url  # port 6543 PgBouncer
+    is_supabase_pooler = "pooler.supabase.com" in url
+    is_supabase_direct = "supabase.co" in url
+    is_supabase = is_supabase_pooler or is_supabase_direct
 
-    if is_supabase:
+    if is_supabase_pooler:
         ssl_context = ssl.create_default_context()
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
-
+        connect_args = {
+            "ssl": ssl_context,
+            "statement_cache_size": 0,  # required for PgBouncer
+        }
+    elif is_supabase_direct:
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
         connect_args = {"ssl": ssl_context}
-
-        if is_pooler:
-            # PgBouncer transaction mode doesn't support prepared statements
-            connect_args["statement_cache_size"] = 0
-
     else:
+        # Render internal DB or local — no SSL needed
         connect_args = {}
 
     return create_async_engine(
