@@ -58,7 +58,7 @@ app.add_middleware(
 app.include_router(api_router)
 
 
-@app.get("/", tags=["Health"])
+@app.api_route("/", methods=["GET", "HEAD"], tags=["Health"])
 async def root():
     return {
         "name": "ARTH",
@@ -69,6 +69,6 @@ async def root():
     }
 
 
-@app.get("/health", tags=["Health"])
+@app.api_route("/health", methods=["GET", "HEAD"], tags=["Health"])
 async def health():
     return {"status": "healthy", "service": "arth-backend"}
