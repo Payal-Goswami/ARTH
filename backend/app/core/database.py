@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.orm import DeclarativeBase
 from app.core.config import settings
 
-# Build SSL context for Supabase / production
+
 def _get_engine():
     url = settings.DATABASE_URL
 
@@ -11,14 +11,20 @@ def _get_engine():
     if "?ssl=" in url:
         url = url.split("?ssl=")[0]
 
-    # Detect production (Supabase) vs local
-    is_supabase = "supabase.co" in url
+    is_supabase = "supabase.com" in url or "supabase.co" in url
+    is_pooler = "pooler.supabase.com" in url  # port 6543 PgBouncer
 
     if is_supabase:
         ssl_context = ssl.create_default_context()
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
+
         connect_args = {"ssl": ssl_context}
+
+        if is_pooler:
+            # PgBouncer transaction mode doesn't support prepared statements
+            connect_args["statement_cache_size"] = 0
+
     else:
         connect_args = {}
 
