@@ -20,7 +20,11 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-1.5-flash"
 
     # Declare as str first — we parse it manually in the validator
-    ALLOWED_ORIGINS: Union[List[str], str] = "http://localhost:5173,http://localhost:3000"
+    ALLOWED_ORIGINS: Union[List[str], str] = (
+        "http://localhost:5173,"
+        "http://localhost:3000,"
+        "https://arth-mu.vercel.app"
+    )
 
     @field_validator("ALLOWED_ORIGINS", mode="before")
     @classmethod
