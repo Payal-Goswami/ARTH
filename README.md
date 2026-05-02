@@ -59,4 +59,4 @@ Once running, visit: `http://localhost:8000/docs`
 
 ---
 
-Built for hackathon by Team ARTH.
+Built for hackathon by Team P2 (ARTH).
